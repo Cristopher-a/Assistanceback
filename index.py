@@ -33,6 +33,13 @@ def subir():
 def leer():
     alumnos = leer_alumnos()
     return jsonify(alumnos)
-
+@app.route("/subirpromedio", methods=["POST"])
+def subir_promedio():
+    data = request.get_json()
+    persona= data.get("persona")
+    promedio= data.get("promedio")
+    
+    # Aquí iría la lógica para subir el promedio
+    return jsonify({"message": "Promedio subido"}), 200
 if __name__ == "__main__":
     app.run(debug=True)
