@@ -46,34 +46,28 @@ def asociar_empleados(file, file_name: str):
     combinado["Área"] = combinado["Área"].fillna("Sin área")
     combinado["Equipo"] = combinado["Equipo"].fillna("Sin equipo")
 
-    # --- Detectar mes y año ---
+    # --- Asegurarse de que Día sea datetime ---
     combinado["Día"] = pd.to_datetime(combinado["Día"], errors="coerce", dayfirst=True)
 
     resultado = []
 
     for name, group in combinado.groupby("name"):
-        # --- Manejar Grupo NaN ---
-        grupo = group["Grupo"].iloc[0]
-        grupo_val = int(grupo) if pd.notna(grupo) and not isinstance(grupo, str) else None
-
-        # --- Total de horas ---
         total_minutos = 0
         hours_per_day = {}
 
         for idx, row in group.iterrows():
-            tiempo = row["Total Diario"]
-            dia_str = row["Día"].strftime("%d") if pd.notna(row["Día"]) else f"{idx+1:02d}"
+            dia_val = row["Día"].strftime("%d/%m/%Y") if pd.notna(row["Día"]) else f"Dia{idx+1}"
+            tiempo = row.get("Total Diario", None)
 
-            minutos_dia = 0
             if isinstance(tiempo, str) and ":" in tiempo:
                 h, m = map(int, tiempo.split(":"))
                 minutos_dia = h * 60 + m
-                total_minutos += minutos_dia
+            else:
+                minutos_dia = 0
+                tiempo = "00:00"  # si no hay registro, 00:00
 
-            # Guardar horas por día en formato HH:MM
-            horas = minutos_dia // 60
-            minutos = minutos_dia % 60
-            hours_per_day[dia_str] = f"{horas:02d}:{minutos:02d}"
+            total_minutos += minutos_dia
+            hours_per_day[dia_val] = f"{minutos_dia // 60:02d}:{minutos_dia % 60:02d}"
 
         horas_total = f"{total_minutos // 60:02d}:{total_minutos % 60:02d}"
 
