@@ -21,9 +21,9 @@ client = MongoClient(MONGO_URI)
 db = client[MONGO_DB]
 
 
-def asociar_empleados(file):
+def asociar_empleados(file, file_name: str):
     # --- Leer archivo de asistencia ---
-    empleado_df, mes_ano = extraer_nombres_empleados(file)
+    empleado_df, mes_ano = extraer_nombres_empleados(file, file_name)
     empleado_df["name"] = empleado_df["name"].str.strip().str.lower()
 
     # --- Leer MongoDB ---
