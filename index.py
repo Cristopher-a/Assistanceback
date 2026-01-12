@@ -4,6 +4,7 @@ from asociar import asociar_empleados, subir_a_mongo
 from leerAlumnos import leer_alumnos
 from login import verificar_usuario
 from subirPromedio import subir_promedio_mongo
+from historial import obtener_historial_de_archivos
 app= Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
 CORS(app, origins=["https://localhost:3000"])
@@ -41,6 +42,9 @@ def subir_promedio():
     promedio= data.get("promedio")
     subir_promedio_mongo(persona, promedio)
     return jsonify({"message": f"Promedio de {persona} subido: {promedio}"}), 200
-
+@app.route("/historial", methods=["GET"])
+def historial():
+    historial_data = obtener_historial_de_archivos()
+    return jsonify(historial_data)
 if __name__ == "__main__":
     app.run(debug=True)
