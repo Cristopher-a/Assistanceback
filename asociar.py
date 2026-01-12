@@ -87,6 +87,7 @@ def asociar_empleados(file, file_name: str):
             "hoursweek": horas_total,
             "days": max(dias_con_registro - 1, 0),
             "attendance": porcentaje,
+            "mes_ano": mes_ano,
         }
 
         resultado.append(emp_dict)
